@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <title>L6_C</title>
+</head>
+<script>
+    function switchColors() {
+        var culoare = prompt("Introdu o culoare noua:", " ");
+        if (culoare && CSS.supports('color', culoare.trim())) {
+            h1.style.color = culoare.trim();
+        } else if (culoare !== null) {
+            alert('Culoarea introdusă nu este validă!');
+        }
+    }
+    function switchColorsP() {
+        var culoare = prompt("Introdu o culoare noua:", " ");
+        if (culoare && CSS.supports('color', culoare.trim())) {
+            p1.style.background = culoare.trim();
+        } else if (culoare !== null) {
+            alert('Culoarea introdusă nu este validă!');
+        }
+    }
+</script>
+<body>
+    <h1 id="h1" onclick=switchColors()>Titlul L6_C cu cateva cuvinte</h1>
+    <p id="p1" onclick=switchColorsP()>
+        Linia 1 de text <br>
+        Linia 2 de text <br>
+        Linia 3 de text
+    </p>
+</body>
+</html>

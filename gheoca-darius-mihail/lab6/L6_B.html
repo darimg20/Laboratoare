@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <title>L6_A</title>
+</head>
+<script>
+    function change1() {
+        var text = prompt("Introduceți noul text al paragrafului:", " ");
+        if (text !== null && text !== "") {
+        document.getElementById("p1").innerHTML = text;
+        }
+    }
+    function change2() {
+        var text = prompt("Introduceți noul text al paragrafului:", " ");
+        if (text !== null && text !== "") {
+        document.getElementById("p2").innerHTML = text;
+        }
+    }
+    function switchP() {
+        const p1 = document.getElementById('p1');
+        const p2 = document.getElementById('p2');
+        [p1.innerHTML, p2.innerHTML] = [p2.innerHTML, p1.innerHTML];
+        [p1.className, p2.className] = [p2.className, p1.className];
+        [p1.style.cssText, p2.style.cssText] = [p2.style.cssText, p1.style.cssText];
+    }
+</script>
+<body>
+    <button id="btt" type="button" onclick=switchP()>Butonash</button>
+    <p id="p1" style="font-family:'Times New Roman', serif; font-size:12pt; color:green" onclick=change1()>Ana are mere.</p>
+    <br><br>
+    <p id="p2" style="font-family:'Arial', serif; font-size:12pt; color:pink" onclick=change2()>Cincizeci si trei de elefanti</p>
+</body>
+</html>
