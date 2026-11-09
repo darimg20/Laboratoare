@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>Masini - abordare "bruta"</title>
+    <script>
+    // ==========================================
+    // 1. LOGICĂ JAVASCRIPT SIMPLU
+    // ==========================================
+    function loadMjs() {
+        document.getElementById("mjs").innerHTML = 
+            "<ul>" +
+                "<li>Tip: Dacia</li>" +
+                "<li>Model: Logan</li>" +
+                "<li>Culoare: verde</li>" +
+            "</ul>";
+    }
+
+    // ==========================================
+    // 2. LOGICĂ LOCAL STORAGE
+    // ==========================================
+    function afiseazaMasiniLS() {
+        var mlsDiv = document.getElementById("mls");
+        var htmlContent = "";
+        var numarMasini = 0;
+
+        for (var i = 0; i < localStorage.length; i++) {
+            var key = localStorage.key(i);
+            if (key.indexOf("masinaLS_") === 0) {
+                try {
+                    var masina = JSON.parse(localStorage.getItem(key));
+                    htmlContent += "<ul>" +
+                        "<li>Tip: " + masina.tip + "</li>" +
+                        "<li>Model: " + masina.model + "</li>" +
+                        "<li>Culoare: " + masina.culoare + "</li>" +
+                    "</ul>";
+                    numarMasini++;
+                } catch (e) {
+                    console.error("Eroare la citirea din Local Storage:", key);
+                }
+            }
+        }
+
+        if (numarMasini === 0) {
+            mlsDiv.innerHTML = "<p>Nicio masina salvata.</p>";
+        } else {
+            mlsDiv.innerHTML = htmlContent;
+        }
+    }
+
+    function loadMls(event) {
+        event.preventDefault();
+
+        var tip = document.getElementById("tipLS").value.trim();
+        var model = document.getElementById("modLS").value.trim();
+        var culoare = document.getElementById("cLS").value.trim();
+
+        // Verificăm dacă mașina există deja iterând prin toate cheile salvate
+        for (var i = 0; i < localStorage.length; i++) {
+            var key = localStorage.key(i);
+            if (key.indexOf("masinaLS_") === 0) {
+                try {
+                    var masinaExistenta = JSON.parse(localStorage.getItem(key));
+                    if (
+                        masinaExistenta.tip.toLowerCase() === tip.toLowerCase() &&
+                        masinaExistenta.model.toLowerCase() === model.toLowerCase() &&
+                        masinaExistenta.culoare.toLowerCase() === culoare.toLowerCase()
+                    ) {
+                        alert("Masina existenta!");
+                        return false;
+                    }
+                } catch (e) {}
+            }
+        }
+
+        var timestamp = Date.now();
+        var cheieMasina = "masinaLS_" + timestamp;
+        var dateMasina = { tip: tip, model: model, culoare: culoare };
+
+        localStorage.setItem(cheieMasina, JSON.stringify(dateMasina));
+
+        event.target.reset();
+        afiseazaMasiniLS();
+        return false;
+    }
+
+    function stergeUltimaMasinaLS() {
+        var ultimaCheie = null;
+        var timestampMaxim = -1;
+
+        for (var i = 0; i < localStorage.length; i++) {
+            var key = localStorage.key(i);
+            if (key.indexOf("masinaLS_") === 0) {
+                var parti = key.split("_");
+                var timp = parseInt(parti[1], 10);
+
+                if (!isNaN(timp) && timp > timestampMaxim) {
+                    timestampMaxim = timp;
+                    ultimaCheie = key;
+                }
+            }
+        }
+
+        if (ultimaCheie) {
+            localStorage.removeItem(ultimaCheie);
+            afiseazaMasiniLS();
+        } else {
+            alert("Nu există mașini de șters din Local Storage!");
+        }
+    }
+
+    // ==========================================
+    // 3. LOGICĂ SESSION STORAGE
+    // ==========================================
+    function afiseazaMasiniSS() {
+        var mssDiv = document.getElementById("mss");
+        var htmlContent = "";
+        var numarMasini = 0;
+
+        for (var i = 0; i < sessionStorage.length; i++) {
+            var key = sessionStorage.key(i);
+            if (key.indexOf("masinaSS_") === 0) {
+                try {
+                    var masina = JSON.parse(sessionStorage.getItem(key));
+                    htmlContent += "<ul>" +
+                        "<li>Tip: " + masina.tip + "</li>" +
+                        "<li>Model: " + masina.model + "</li>" +
+                        "<li>Culoare: " + masina.culoare + "</li>" +
+                    "</ul>";
+                    numarMasini++;
+                } catch (e) {
+                    console.error("Eroare la citirea din Session Storage:", key);
+                }
+            }
+        }
+
+        if (numarMasini === 0) {
+            mssDiv.innerHTML = "<p>Nicio masina salvata.</p>";
+        } else {
+            mssDiv.innerHTML = htmlContent;
+        }
+    }
+
+    function loadMss(event) {
+        event.preventDefault();
+
+        var tip = document.getElementById("tipSS").value.trim();
+        var model = document.getElementById("modSS").value.trim();
+        var culoare = document.getElementById("cSS").value.trim();
+
+        // Verificăm dacă mașina există deja în Session Storage
+        for (var i = 0; i < sessionStorage.length; i++) {
+            var key = sessionStorage.key(i);
+            if (key.indexOf("masinaSS_") === 0) {
+                try {
+                    var masinaExistenta = JSON.parse(sessionStorage.getItem(key));
+                    if (
+                        masinaExistenta.tip.toLowerCase() === tip.toLowerCase() &&
+                        masinaExistenta.model.toLowerCase() === model.toLowerCase() &&
+                        masinaExistenta.culoare.toLowerCase() === culoare.toLowerCase()
+                    ) {
+                        alert("Masina existenta!");
+                        return false;
+                    }
+                } catch (e) {}
+            }
+        }
+
+        var timestamp = Date.now();
+        var cheieMasina = "masinaSS_" + timestamp;
+        var dateMasina = { tip: tip, model: model, culoare: culoare };
+
+        sessionStorage.setItem(cheieMasina, JSON.stringify(dateMasina));
+
+        event.target.reset();
+        afiseazaMasiniSS();
+        return false;
+    }
+
+    function stergeUltimaMasinaSS() {
+        var ultimaCheie = null;
+        var timestampMaxim = -1;
+
+        for (var i = 0; i < sessionStorage.length; i++) {
+            var key = sessionStorage.key(i);
+            if (key.indexOf("masinaSS_") === 0) {
+                var parti = key.split("_");
+                var timp = parseInt(parti[1], 10);
+
+                if (!isNaN(timp) && timp > timestampMaxim) {
+                    timestampMaxim = timp;
+                    ultimaCheie = key;
+                }
+            }
+        }
+
+        if (ultimaCheie) {
+            sessionStorage.removeItem(ultimaCheie);
+            afiseazaMasiniSS();
+        } else {
+            alert("Nu există mașini de șters din Session Storage!");
+        }
+    }
+
+    // Inițializare la deschiderea/reîmprospătarea paginii
+    document.addEventListener("DOMContentLoaded", function() {
+        afiseazaMasiniLS();
+        afiseazaMasiniSS();
+    });
+    </script>
+</head>
+<body>
+
+    <!-- Bloc JavaScript simplu -->
+    <div style="background-color:LimeGreen;color:white;font-size:150%;padding:15px;margin-bottom:15px;" onclick="loadMjs()">
+        <p>Masina JavaScript (click pentru afisare)</p>
+        <div id="mjs"></div>
+    </div>
+
+    <!-- Bloc Local Storage -->
+    <div style="background-color:ForestGreen;color:white;font-size:150%;padding:15px;margin-bottom:15px;">
+        <p>Masina Local Storage</p>
+        <form onsubmit="return loadMls(event)">
+            <label for="tipLS">Tip</label> <input id="tipLS" required>
+            <label for="modLS">Model</label> <input id="modLS" required>
+            <label for="cLS">Culoare</label> <input id="cLS" required>
+            <button type="submit">Salvează</button>
+            <button type="button" onclick="stergeUltimaMasinaLS()">Sterge</button>
+        </form>
+        <div id="mls"></div>
+    </div>
+
+    <!-- Bloc Session Storage -->
+    <div style="background-color:SeaGreen;color:white;font-size:150%;padding:15px;">
+        <p>Masina Session Storage</p>
+        <form onsubmit="return loadMss(event)">
+            <label for="tipSS">Tip</label> <input id="tipSS" required>
+            <label for="modSS">Model</label> <input id="modSS" required>
+            <label for="cSS">Culoare</label> <input id="cSS" required>
+            <button type="submit">Salvează</button>
+            <button type="button" onclick="stergeUltimaMasinaSS()">Sterge</button>
+        </form>
+        <div id="mss"></div>
+    </div>
+
+</body>
+</html>
