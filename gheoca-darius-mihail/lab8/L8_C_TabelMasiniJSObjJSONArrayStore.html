@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Tabel masini</title>
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+</style>
+<script>
+  function validare(mc, md, cl) {
+    if (mc != "" && md != "" && cl != "")
+      return "";
+    else
+      return "Eroare!";
+  }
+</script>
+</head>
+<body>
+<h1 > Masinile dorite </h1>
+
+<form onsubmit="return adaugaMasina()">
+ <input id="marca" placeholder="Marca" required>
+ <input id="model" placeholder="Model" required>
+ <input id="culoare" placeholder="Culoare" required>
+ <button type="submit">Adauga masina</button>
+</form>
+<p id="mesaj"></p>
+<p>
+<table id="tm">
+<tr>
+    <th>Marca</th>
+    <th>Model</th>
+    <th>Culoare</th>
+  </tr>
+  
+</table>
+</p>
+<script>
+const masini2Store = [];
+if(localStorage.carsArray) {
+let arrayJSON = localStorage.carsArray;
+var masiniStored = JSON.parse(arrayJSON);
+for(i=0; i < masiniStored.length ; i++){
+document.getElementById("tm").innerHTML += masiniStored[i].randNou; // proprietate 
+masini2Store.push(masiniStored[i]);
+}
+}
+
+
+
+function masina(mk, md, cl){
+this.marca= mk;
+this.model = md;
+this.culoare = cl;
+this.randNou = function() {return "<tr><td>" + this.marca +"</td><td>" + this.model + "</td><td>" + this.culoare + "</td></tr>"}
+}
+
+function adaugaMasina() {
+var marca = document.getElementById("marca").value;
+var model = document.getElementById("model").value;
+var culoare = document.getElementById("culoare").value;
+
+var errtext = validare(marca, model, culoare);
+
+if (errtext != "") {
+  document.getElementById("mesaj").innerHTML = errtext;
+} else {
+  var mNoua = new masina(marca, model, culoare);
+  document.getElementById("tm").innerHTML +=  mNoua.randNou(); 
+
+  mNoua.randNou = 	mNoua.randNou().toString();
+  masini2Store.push(mNoua);
+  var myJSON = JSON.stringify(masini2Store);
+}
+localStorage.setItem("carsArray", myJSON);
+}
+</script>
+</body>
+</html>
+
+<!-- In acest html, apar tabloul masini2store cheia carsArray si bucla de incarcare -->

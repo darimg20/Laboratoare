@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Tabel masini</title>
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+</style>
+<script>
+  function validare(mc, md, cl) {
+    if (mc != "" && md != "" && cl != "")
+      return "";
+    else
+      return "Eroare!";
+  }
+</script>
+</head>
+<body>
+<h1 > Masinile dorite </h1>
+
+<form onsubmit="return adaugaMasina()">
+ <input id="marca" placeholder="Marca" required>
+ <input id="model" placeholder="Model" required>
+ <input id="culoare" placeholder="Culoare" required>
+ <button type="submit">Adauga masina</button>
+</form>
+<p id="mesaj"></p>
+<p> <!-- a) dupa adaugarea unei masini, cheia masinaN contine datele noii masini adaugate -->
+<table id="tm">
+<tr>
+    <th>Marca</th>
+    <th>Model</th>
+    <th>Culoare</th>
+  </tr>
+  
+</table>
+</p>
+<script>
+var m1 = new masina("Opel", "Zafira", "gri");
+var m2 = new masina("Seat", "Ibiza", "roz");
+
+document.getElementById("tm").innerHTML += m1.randNou(); 
+
+document.getElementById("tm").innerHTML +=  m2.randNou(); 
+if(localStorage.masinaN) {
+var masinaJSON = localStorage.masinaN;
+var mNoua = JSON.parse(masinaJSON);
+
+document.getElementById("tm").innerHTML += mNoua.randNou; // proprietate 
+}
+
+// c) Daca s-ar scrie mNoua.randNou(), js ar incerca sa apeleze un sir de caractere ca pe o functie si ar trimite o eroare
+
+// d) in L8_B apare o singura masina adaugata, pe langa cele 2 deja existente, adica 3 masini in total
+
+
+
+function masina(mk, md, cl){
+this.marca= mk;
+this.model = md;
+this.culoare = cl;
+this.randNou = function() {return "<tr><td>" + this.marca +"</td><td>" + this.model + "</td><td>" + this.culoare + "</td></tr>"}
+}
+function adaugaMasina() {
+
+
+var marca = document.getElementById("marca").value;
+var model = document.getElementById("model").value;
+var culoare = document.getElementById("culoare").value;
+
+var errtext = validare(marca, model, culoare);
+
+if (errtext != "") {
+  document.getElementById("mesaj").innerHTML = errtext;
+} else {
+  var mNoua = new masina(marca, model, culoare);
+
+  document.getElementById("tm").innerHTML +=  mNoua.randNou(); 
+
+  mNoua.randNou = mNoua.randNou().toString(); // b) fara toString(), la apelul functiei stringify(), ar fi aparut o eroare, deoarece nu ar putea fi realizata notatia JSON
+  var myJSON = JSON.stringify(mNoua);
+}
+
+localStorage.setItem("masinaN", myJSON);
+
+
+}
+</script>
+</body>
+</html>
